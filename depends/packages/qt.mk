@@ -1,7 +1,7 @@
 PACKAGE=qt
 $(package)_version=6.0.0
 $(package)_download_path=https://download.qt.io/archive/qt/6.0/$($(package)_version)/submodules
-$(package)_suffix=opensource-src-$($(package)_version).tar.xz
+$(package)_suffix=src-$($(package)_version).tar.xz
 $(package)_file_name=qtbase-everywhere-$($(package)_suffix)
 $(package)_sha256_hash=ae227180272d199cbb15318e3353716afada5c57fd5185b812ae26912c958656
 $(package)_dependencies=openssl zlib
