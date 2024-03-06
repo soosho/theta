@@ -1,76 +1,83 @@
-Theta Core Latest v1.13.17.01
-===========================
-Theta is good for nothing unless you know the value of it by experience.
+### Usage
 
-[![Theta Build](https://github.com/thetaspere/theta/actions/workflows/build.yaml/badge.svg?branch=master)](https://github.com/thetaspere/theta/actions/workflows/build.yaml)
+To build dependencies for the current arch+OS:
 
-|CI|master|develop|
-|-|-|-|
+    make
 
-# Coin specifications:
-&nbsp; | &nbsp;
------- | ------
-**Coin name:** | THETA
-**Coin Ticker:** | FITA
-**Coin Symbol:** | θ
-**Initial block reward:** | 4 θ - 5000 θ
-**Average block time:** | 120 Second
-**Smartnode Payments Start Block**: | 5761
-**Algorithm:** | GhostRider (ASIC and FPGA resistance)
-**Premine:** | none
-**Block Reward:** | 70% Miners 25% Smartnode 3% Dev 1% Exchange 1 % Community Reward.
-**Donation:** | 1PWUCof4ucq6N4trahdCpTghYz7cdDwT3t
+To build for another arch/OS:
 
-Theta is now a code fork of Dash and inherits current and optionally future features such as chain locks, oracles etc. We are further expanding capabilities by adding the following features:
-A)	The deployment of a unique asset layer.
-B)	The option to lock X amount of coins or assets into a special transaction. Coins are unlocked at a block number of choice or timestamp.
-C)	Trustless on chain transfers of assets and native coins VIA Smart Contracts.
-D)	Integrating, developing and deploying a VM protocol that would allow for smart contracts in 4 major programming languages as opposed to the situation with Ethereum being limited to solidity.
+    make HOST=host-platform-triplet
 
-These additional features open up the power and ease of use of Theta’s features to a greater variety of industries under the Distributed Application umbrella. DAPP's are a critical part of driving widespread adoption as recently seen with DEFI and Theta hopes to help provide further alternatives and possibilities for DAPP developers particularly in the field of opening up new programming languages for DAPP and contract development.
+For example:
 
-It is one of our goals to not only innovate ideas for Theta but to contribute back to the general crypto community with open-source features that anybody can use to help their Blockchain projects succeed.
+    make HOST=x86_64-w64-mingw32 -j4
 
+A prefix will be generated that's suitable for plugging into Raptoreum's
+configure. In the above example, a dir named x86_64-w64-mingw32 will be
+created. To use it for Raptoreum:
 
-License
--------
+    ./configure --prefix=`pwd`/depends/x86_64-w64-mingw32
 
-Theta Core is released under the terms of the MIT license. See [COPYING](COPYING) for more
-information or see https://opensource.org/licenses/MIT.
+Common `host-platform-triplets` for cross compilation are:
 
-Development Process
--------------------
+- `i686-w64-mingw32` for Win32
+- `x86_64-w64-mingw32` for Win64
+- `x86_64-apple-darwin14` for MacOSX
+- `arm-linux-gnueabihf` for Linux ARM 32 bit
+- `aarch64-linux-gnu` for Linux ARM 64 bit
+- `riscv32-linux-gnu` for Linux RISC-V 32 bit
+- `riscv64-linux-gnu` for Linux RISC-V 64 bit
 
-The `master` branch is meant to be stable. Development is done in separate branches.
-[Tags](https://github.com/theta/theta/tags) are created to indicate new official,
-stable release versions of Theta Core.
+No other options are needed, the paths are automatically configured.
 
-The contribution workflow is described in [CONTRIBUTING.md](CONTRIBUTING.md).
+Install the required dependencies: Ubuntu & Debian
+--------------------------------------------------
 
-Testing
--------
+For macOS cross compilation:
 
-Testing and code review is the bottleneck for development; we get more pull
-requests than we can review and test on short notice. Please be patient and help out by testing
-other people's pull requests, and remember this is a security-critical project where any mistake might cost people
-lots of money.
+    sudo apt-get install curl librsvg2-bin libtiff-tools bsdmainutils imagemagick libcap-dev libz-dev libbz2-dev python-setuptools
 
-### Automated Testing
+For Win32/Win64 cross compilation:
 
-Developers are strongly encouraged to write [unit tests](src/test/README.md) for new code, and to
-submit new unit tests for old code. Unit tests can be compiled and run
-(assuming they weren't disabled in configure) with: `make check`. Further details on running
-and extending unit tests can be found in [/src/test/README.md](/src/test/README.md).
+- see [build-windows.md](../doc/build-windows.md#cross-compilation-for-ubuntu-and-windows-subsystem-for-linux)
 
-There are also [regression and integration tests](/test), written
-in Python, that are run automatically on the build server.
-These tests can be run (if the [test dependencies](/test) are installed) with: `test/functional/test_runner.py`
+For linux (including i386, ARM) cross compilation:
 
-The Travis CI system makes sure that every pull request is built for Windows, Linux, and OS X, and that unit/sanity tests are run automatically.
+    sudo apt-get install curl g++-aarch64-linux-gnu g++-4.8-aarch64-linux-gnu gcc-4.8-aarch64-linux-gnu binutils-aarch64-linux-gnu g++-arm-linux-gnueabihf g++-4.8-arm-linux-gnueabihf gcc-4.8-arm-linux-gnueabihf binutils-arm-linux-gnueabihf g++-4.8-multilib gcc-4.8-multilib binutils-gold bsdmainutils
 
-### Manual Quality Assurance (QA) Testing
+For linux RISC-V 64-bit cross compilation (there are no packages for 32-bit):
 
-Changes should be tested by somebody other than the developer who wrote the
-code. This is especially important for large or high-risk changes. It is useful
-to add a test plan to the pull request description if testing the changes is
-not straightforward.
+    sudo apt-get install curl g++-riscv64-linux-gnu binutils-riscv64-linux-gnu
+
+RISC-V known issue: gcc-7.3.0 and gcc-7.3.1 result in a broken `test_raptoreum` executable (see https://github.com/bitcoin/bitcoin/pull/13543),
+this is apparently fixed in gcc-8.1.0.
+
+Dependency Options:
+The following can be set when running make: make FOO=bar
+
+    SOURCES_PATH: downloaded sources will be placed here
+    BASE_CACHE: built packages will be placed here
+    SDK_PATH: Path where sdk's can be found (used by OSX)
+    FALLBACK_DOWNLOAD_PATH: If a source file can't be fetched, try here before giving up
+    NO_QT: Don't download/build/cache qt and its dependencies
+    NO_WALLET: Don't download/build/cache libs needed to enable the wallet
+    NO_UPNP: Don't download/build/cache packages needed for enabling upnp
+    DEBUG: disable some optimizations and enable more runtime checking
+    HOST_ID_SALT: Optional salt to use when generating host package ids
+    BUILD_ID_SALT: Optional salt to use when generating build package ids
+
+If some packages are not built, for example `make NO_WALLET=1`, the appropriate
+options will be passed to Raptoreum Core's configure. In this case, `--disable-wallet`.
+
+Additional targets:
+
+    download: run 'make download' to fetch all sources without building them
+    download-osx: run 'make download-osx' to fetch all sources needed for osx builds
+    download-win: run 'make download-win' to fetch all sources needed for win builds
+    download-linux: run 'make download-linux' to fetch all sources needed for linux builds
+
+### Other documentation
+
+- [description.md](description.md): General description of the depends system
+- [packages.md](packages.md): Steps for adding packages
+
