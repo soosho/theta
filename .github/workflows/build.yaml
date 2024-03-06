@@ -10,6 +10,7 @@ on:
   pull_request:
     branches:
       - develop
+  workflow_dispatch:
 env:
   COIN_NAME: theta
   BUILD_DIR: theta-build
